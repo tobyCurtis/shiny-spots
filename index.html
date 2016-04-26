@@ -15,7 +15,7 @@
     <hr>
     <p>There are some great places to see in downtown San Diego. In this project you'll get to know a few of them by turning the provided JSON file into a table in HTML with links to Google Maps using jQuery.</p>
   </div>
-  <div class="container">
+  <div class="container" id="toby">
     <table class="table table-striped table-hover">
       <thread>
         <tr>
@@ -28,5 +28,23 @@
       </tbody>
     </table>
   </div>
+  <div id="map" class="container">TOBY</div>
   <script src="/js/index.js"></script>
+  <script>
+  var map;
+
+  function initMap()
+  {
+    map = new google.maps.Map(document.getElementById('map'),
+    {
+      center:
+      {
+        lat: -34.397,
+        lng: 150.644
+      },
+      zoom: 8
+    });
+  }
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAv4SJ5XjttM1jwxqEI2fTtJ_x1XizPBvk&callback=initMap" async defer></script>
 </body>
