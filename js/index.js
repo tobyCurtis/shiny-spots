@@ -1,31 +1,28 @@
 $(document).ready(
-    function()
-    {
+    function() {
 
 
 
-        $.getJSON("../topspots.json", function(data)
-        {
+        $.getJSON("../topspots.json", function(data) {
 
-            $(data).each(function(index, value)
-            {
+            $(data).each(function(index, value) {
                 //creating the HTML holder for the row
                 var trHTML = '';
                 var mapLink = "https://www.google.com/maps?q=";
                 mapLink += value.location[0] + "," + value.location[1];
-                trHTML += '<tr><td>' + value.name + '</td><td>' + value.description + '</td><td><a href="' + mapLink + '" class="btn btn-primary" target="_blank"' + '>Open in Google Maps</a></td></tr>';
+                trHTML += '<tr><td>' + value.name + '</td><td>' + value.description + '</td><td style="vertical-align:middle"><a href="' + mapLink + '" class="btn btn-primary btn-block button" target="_blank"' + '>Open in Google Maps</a></td></tr>';
                 $('#spots').append(trHTML);
             });
 
 
 
             var map;
-            window.initMap = function()
-            {
-                map = new google.maps.Map(document.getElementById('map'),
-                    {
-                        center:
-                        {
+            var markers = [];
+            var infowindow = null;
+
+            window.initMap = function() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                        center: {
                             lat: 32.7152778,
                             lng: -117.1563889
                         },
@@ -34,51 +31,44 @@ $(document).ready(
 
                 );
 
-                for (var i = 0; i < data.length; i++)
-                {
+                for (var i = 0; i < data.length; i++) {
                     var latLng = new google.maps.LatLng(data[i].location[0], data[i].location[1]);
-                    var marker = new google.maps.Marker(
-                    {
+                    var marker = new google.maps.Marker({
                         position: latLng,
                         map: map,
                         title: data[i].name
                     });
+                    markers.push(marker);
                 }
+
+
+
+                infowindow = new google.maps.InfoWindow({
+                    content: "holding..."
+                });
+
+                for (var i = 0; i < markers.length; i++) {
+                    var marker = markers[i];
+                    google.maps.event.addListener(marker, 'click', function() {
+                        // where I have added .html to the marker object.
+                        infowindow.setContent("this");
+                        infowindow.open(map, this);
+                    });
+                }
+
+
+                var bounds = new google.maps.LatLngBounds();
+                for (var i = 0; i < markers.length; i++) {
+                    bounds.extend(markers[i].getPosition());
+                }
+
+                map.fitBounds(bounds);
 
 
             }
 
-            // Where I need to put code inserting elements
-
 
         });
-
-
-
-
-
-
-
-        // function initMap()
-        // {
-        //     var myLatLng = {
-        //         lat: -25.363,
-        //         lng: 131.044
-        //     };
-
-        //     var map = new google.maps.Map(document.getElementById('map'),
-        //     {
-        //         zoom: 4,
-        //         center: myLatLng
-        //     });
-
-        //     var marker = new google.maps.Marker(
-        //     {
-        //         position: myLatLng,
-        //         map: map,
-        //         title: 'Hello World!'
-        //     });
-        // }
 
 
 
